@@ -106,6 +106,7 @@
           $textarea.bind({
               'keyup': function() {
                 applyText($textarea.val());
+                $textarea.focus(); //Return the cursor to the textarea
               },
               'scroll': function() {
                 updateSizePosition();
