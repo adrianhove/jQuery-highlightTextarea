@@ -6,6 +6,11 @@
  *
  * thanks to Julien L for part of the code
  *    http://stackoverflow.com/a/7599199
+ * 
+ * thanks to Adrian Hove for part of the code
+ *    - Multi-color support
+ *    - Regex support
+ *   https://plus.google.com/114727983217798359041
  *
  * Dual licensed under the MIT or GPL Version 3 licenses.
  *    http://www.opensource.org/licenses/mit-license.php
@@ -27,6 +32,7 @@
       var defaults = {
           words: ['a','e','i','o','u'],
           color: '#ffff00',
+          regGroup :[],
           caseSensitive: true,
           resizable: false,
           id: null,
@@ -39,8 +45,7 @@
         
       this.each(function() {
           var $textarea = $(this);
-
-          // create necessary wrappers
+          $(this).focus();
           $textarea.wrap('<div class="highlightTextarea" />');
           var $main = $textarea.parent('.highlightTextarea');
           $main.prepend('<div class="highlighterContainer"><div class="highlighter"></div></div>');
@@ -106,7 +111,7 @@
           $textarea.bind({
               'keyup': function() {
                 applyText($textarea.val());
-                $textarea.focus(); //Return the cursor to the textarea
+                $textarea.focus();
               },
               'scroll': function() {
                 updateSizePosition();
@@ -139,11 +144,22 @@
           function applyText(text) {
               text = replaceAll(text, '\n', '<br/>');
               text = replaceAll(text, '  ', '&nbsp;&nbsp;');
-              
-              if (options.words[0] != "") {
-                replace = options.words[0];
-                for (var i=1;i<options.words.length;i++) replace+= '|'+options.words[i];
-                text = replaceAll(text, replace, "<span class=\"highlight\" style=\"background-color:"+options.color+";\">$1</span>");
+              if(options.regGroup.length) // Check for regex (By Adrian Hove)
+              {
+                	for (var i=0;i<options.regGroup.length;i++)
+                	{
+
+                		text = text.replace(new RegExp(options.regGroup[i].regex+'(?=[^>]*(<|$))','gi'), "<span class=\"highlight\" style=\"background-color:"+options.regGroup[i].color+";\">$1</span>");
+
+                }
+              }
+              else{
+              	if (options.words[0] != "") 
+              	{
+                	replace = options.words[0];
+                	for (var i=1;i<options.words.length;i++) replace+= '|'+options.words[i];
+                	text = replaceAll(text, replace, "<span class=\"highlight\" style=\"background-color:"+options.color+";\">$1</span>");
+                }
               }
               
               $highlighter.html(text);
