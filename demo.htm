@@ -15,11 +15,26 @@
 
   <script type="text/javascript">
   $(document).ready(function() {
-      $("#demo1").highlightTextarea({
-          words: ["Lorem ipsum","vulputate"],
-          color: "#ADF0FF"
-      });
-      $("#demo2").highlightTextarea({
+      var pronounColor =  '#ffff00';
+      var prepositionColor = '#d1c79e';
+    	var ndi = new Object();
+  	    ndi.regex = '\\b(nd((aka|a(?!k))|ine|ino|iri|o)(?=[a-z]))';
+  	    ndi.color = pronounColor;
+  	  var va = new Object();
+  		  va.regex = '\\b(v((aka|a(?!(k|n|r)))|ane|ano|ari|o)(?=[a-z]))';
+  	    va.color = pronounColor;
+  	  var e = new Object();
+  	    e.regex = '\\b([ch|k|v|hw|n|tw|y|r|zv|w]{0,}e(?!(ni|we)))(?=[a-z])';
+  	    e.color = prepositionColor; 
+    	var ari = new Object();
+  	    ari .regex = '\\b(ari)(?=[a-z])';
+  	    ari .color = pronounColor;
+  	 
+  	var reg = [ndi,va,ari,e];
+  	      	
+    $("#demo").highlightTextarea({ regGroup: reg });
+      			
+    $("#demo2").highlightTextarea({
           words: ["lOrEm IpSuM","VULPUTATE"],
           caseSensitive: false
       });
@@ -35,6 +50,8 @@
           color:'#99f',
           id: "demo5-wrap"
       });
+      
+      
   });
   </script>
   
